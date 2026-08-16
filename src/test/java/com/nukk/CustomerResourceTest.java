@@ -7,7 +7,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.notNullValue;
 
 @QuarkusTest
@@ -37,12 +36,12 @@ class CustomerResourceTest {
     @Test
     void returnsCustomerDetails() {
         given()
-          .when().get("/customers/CUST-002")
+          .when().get("/customers/northwind-logistics")
           .then()
              .statusCode(200)
-             .body("company", is("Vega Retail Group"))
+             .body("company", is("Northwind Logistics"))
              .body("healthScore", is(88))
-             .body("recentTickets", hasSize(2))
+             .body("tickets", hasSize(3))
              .body("lastLogin", notNullValue());
     }
 
@@ -52,23 +51,23 @@ class CustomerResourceTest {
           .when().get("/customers")
           .then()
              .statusCode(200)
-             .body("findAll { it.healthScore < 40 }", hasSize(3));
+             .body("findAll { it.healthScore < 50 }", hasSize(3));
     }
 
     @Test
     void churnRiskCustomerHasCollapsingUsage() {
         given()
-          .when().get("/customers/CUST-009")
+          .when().get("/customers/pixelforge-studio")
           .then()
              .statusCode(200)
-             .body("healthScore", lessThan(40))
-             .body("usageLast30Days", lessThan(500));
+             .body("healthScore", is(28))
+             .body("usage30d", is(310));
     }
 
     @Test
     void returns404ForUnknownCustomer() {
         given()
-          .when().get("/customers/CUST-999")
+          .when().get("/customers/unknown-co")
           .then()
              .statusCode(404)
              .body("error", is("customer_not_found"));
@@ -77,7 +76,7 @@ class CustomerResourceTest {
     @Test
     void analyzeReturns404ForUnknownCustomer() {
         given()
-          .when().post("/customers/CUST-999/analyze")
+          .when().post("/customers/unknown-co/analyze")
           .then()
              .statusCode(404)
              .body("error", is("customer_not_found"));

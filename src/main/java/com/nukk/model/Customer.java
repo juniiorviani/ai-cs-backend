@@ -5,13 +5,26 @@ import java.util.List;
 public record Customer(
     String id,
     String company,
+    String domain,
+    String industry,
+    String plan,
     double mrr,
     int healthScore,
-    int usageLast30Days,
-    int previousUsage,
+    int usage30d,
+    double usageChangePct,
+    List<Integer> usageTrend,
+    int seats,
+    int activeSeats,
     int openTickets,
-    List<Ticket> recentTickets,
+    List<Ticket> tickets,
+    List<FeatureAdoption> featureAdoption,
+    List<TimelineEvent> timeline,
+    String csm,
+    String contactName,
+    String contactEmail,
+    String customerSince,
+    String renewalDate,
     String lastLogin,
-    String accountAge
+    Integer nps
 ) {
 }
